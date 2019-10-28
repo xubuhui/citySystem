@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台登录-X-admin1.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/Swiper/3.4.2/css/swiper.min.css">-->
+    <!--<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>-->
+    <!--<script type="text/javascript" src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.jquery.min.js"></script>-->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
+    <script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+    <script src="https://unpkg.com/swiper/js/swiper.js"> </script>
+    <script src="https://unpkg.com/swiper/js/swiper.min.js"> </script>
+
+    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/xadmin.js"></script>
+    <script type="text/javascript" src="./js/jquery.cookie.js"></script>
+</head>
+<body>
+ <!--中部开始 -->
+<div class="wrapper">
+    <!-- 右侧主体开始 -->
+    <div class="page-content">
+        <div class="content">
+            <label >相关数据展示</label>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        省
+                    </th>
+                    <th>
+                        市
+                    </th>
+                    <th>
+                        区
+                    </th>
+                    <th>
+                        小区名
+                    </th>
+                    <th>
+                        经度
+                    </th>
+                    <th>
+                        纬度
+                    </th>
+                    <th>
+                        单价
+                    </th>
+                    <!--<th>-->
+                        <!--操作-->
+                    <!--</th>-->
+                </tr>
+                </thead>
+                <tbody >
+                </tbody>
+            </table>
+            <form class="layui-form" action="app/userAction.php?action=userUp" method="post">
+                <input id='cid' name= 'id' value="" type="text" hidden="hidden" >
+                <input id='province' name= 'province' value="" hidden="hidden" >
+                <input id='city' name= 'city' value="" hidden="hidden">
+                <input id='district' name= 'district' value="" hidden="hidden">
+                <input id='nick_name' name= 'nick_name' value="" hidden="hidden">
+                <input id='lng' name= 'lng' value="" hidden="hidden">
+                <input id='lat' name= 'lat' value="" hidden="hidden">
+                <input id='price' name= 'price' value="" hidden="hidden">
+                <button class="layui-btn" key="set-mine" lay-filter="save" lay-submit  onclick="parent.location.reload(); alert('审核通过');">
+                    审核通过
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- 右侧主体结束 -->
+</div>
+
+<script>
+    $(function () {
+            let cookie = $.cookie('admin');
+            if (cookie == null || cookie === '') {
+                location.href = 'login.html';
+                return false;
+            }
+            let cid = window.location.href.split("?id=")[1];
+            // $("#cid").value(cid);
+            // alert(cid);
+            $.ajax({
+                type: "get",
+                async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+                url: "app/userAction.php?action=userAboutCid&cid=" + cid,
+                // data:{'page':10},
+                dataType: "json",
+                success: function (data) {
+                    //
+                    $.cookie('page2',1);
+                    let nick_name = data[0].nick_name;
+                    $("#cid").val(data[0].id);
+                    $("#province").val(data[0].province);
+                    $("#city").val(data[0].city);
+                    $("#district").val(data[0].district);
+                    $("#nick_name").val(data[0].nick_name);
+                    $("#lng").val(data[0].lng);
+                    $("#lat").val(data[0].lat);
+                    $("#price").val(data[0].price);
+                    $.get("app/userAction.php?action=userAboutNick&nick_name=" + nick_name, function (data) {
+                        console.log(data);
+                        $.each(data, function (index, item) {
+                                var td = $("<td></td>").text(item.id);
+                                var td2 = $("<td></td>").text(item.province);
+                                var td3 = $("<td></td>").text(item.city);
+                                var td4 = $("<td></td>").text(item.district);
+                                var td5 = $("<td></td>").text(item.nick_name);
+                                var td6 = $("<td></td>").text(item.lng);
+                                var td7 = $("<td></td>").text(item.lat);
+                                var td8 = $("<td></td>").text(item.price);
+                                var tr = $("<tr></tr>").append(td, td2, td3, td4, td5, td6, td7, td8);
+                                $('tbody').append(tr);
+                            }
+                        );
+
+                    }, "json");
+
+
+                }
+            });
+      })
+
+</script>
+</body>
+</html>

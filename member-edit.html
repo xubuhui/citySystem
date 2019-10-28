@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>城市后台管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/Swiper/3.4.2/css/swiper.min.css">-->
+    <!--<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>-->
+    <!--<script type="text/javascript" src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.jquery.min.js"></script>-->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
+    <script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+    <script src="https://unpkg.com/swiper/js/swiper.js"> </script>
+    <script src="https://unpkg.com/swiper/js/swiper.min.js"> </script>
+
+    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/xadmin.js"></script>
+    <script type="text/javascript" src="./js/jquery.cookie.js"></script>
+</head>
+<body>
+    <!-- 中部开始 -->
+    <div class="wrapper">
+        <!-- 右侧主体开始 -->
+        <div class="page-content">
+          <div class="content">
+            <!-- 右侧内容框架，更改从这里开始 -->
+            <form class="layui-form" action="app/adminAction.php?action=adminEdit" method="post">
+                <input type="text" id="cityId"   name="cityId"
+                      value=""  hidden="hidden">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        省份
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="province"   name="province"
+                        autocomplete="off" value="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label  class="layui-form-label">
+                        市
+                    </label>
+                    <div class="layui-input-inline" id="cc">
+                        <input type="text" id="city" name="city" autocomplete="off" value=""
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label  class="layui-form-label">
+                        区
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="district" name="district" autocomplete="off" value=""
+                        class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label  class="layui-form-label">
+                        小区名
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="nick_name" name="nick_name" autocomplete="off" value=""
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label  class="layui-form-label">
+                        经度
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="lng" name="lng" autocomplete="off" value=""
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">
+                        纬度
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="lat" name="lat" autocomplete="off" value=""
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label  class="layui-form-label">
+                        单价
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="price" name="price" autocomplete="off" value=""
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label  class="layui-form-label">
+                    </label>
+                    <button class="layui-btn" key="set-mine" lay-filter="save" lay-submit onclick="parent.location.reload();">
+                        保存
+                    </button>
+                </div>
+            </form>
+            <!-- 右侧内容框架，更改从这里结束 -->
+          </div>
+        </div>
+        <!-- 右侧主体结束 -->
+    </div>
+    <!-- 中部结束 -->
+<script>
+
+    $(function () {
+            let cookie = $.cookie('admin');
+            if (cookie == null || cookie === '') {
+                location.href = 'login.html';
+                return false;
+            }
+
+
+    //获取参数
+    var id=window.location.href.split("?id=")[1];
+    // alert(id);
+    $.ajax({
+        url : "app/adminAction.php?action=adminEditId",
+        data:{'id':id},
+        dataType : "json",//数据格式 
+        async: true,
+        type : "get",//请求方式
+        success : function(data) {  
+            console.log(data);
+            $.cookie('page1',1);
+            let id = data[0].id;
+            let province = data[0].province;
+            let city = data[0].city;
+            let district = data[0].district;
+            let nick_name = data[0].nick_name;
+            let lng = data[0].lng;
+            let lat = data[0].lat;
+            let price = data[0].price;
+            $('#province').val(province);
+            $('#city').val(city);
+            $('#district').val(district);
+            $('#nick_name').val(nick_name);
+            $('#lng').val(lng);
+            $('#lat').val(lat);
+            $('#price').val(price);
+            $('#cityId').val(id);
+        },
+    });
+    })
+</script>
+</body>
+</html>
